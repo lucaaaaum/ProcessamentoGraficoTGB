@@ -20,13 +20,14 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          packages = [
-            pkgs.cmake
-            pkgs.ninja
-            pkgs.pkg-config
-            pkgs.clang-tools
-            pkgs.gdb
-            pkgs.valgrind
+          packages = with pkgs; [
+            cmake
+            ninja
+            pkg-config
+            clang-tools
+            gdb
+            valgrind
+            opencv
           ];
 
           buildInputs = qtLibs ++ [
