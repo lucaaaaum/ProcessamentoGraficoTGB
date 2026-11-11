@@ -1,6 +1,12 @@
-#include <iostream>
+#include <QApplication>
+#include <QLabel>
+#include <qnamespace.h>
 
-int main() {
-  std::cout << "teste";
-  return 0;
+int main(int argc, char *argv[]) {
+  QApplication app(argc, argv);
+  QLabel label("Hello, World!");
+  label.setAlignment(Qt::AlignCenter);
+  label.resize(400, 300);
+  label.show();
+  return app.exec();
 }
