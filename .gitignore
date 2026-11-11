@@ -1,3 +1,6 @@
+build/
+.cache/
+
 # Created by https://www.toptal.com/developers/gitignore/api/c++,qt,git,direnv
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,qt,git,direnv
 
