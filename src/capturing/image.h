@@ -1,12 +1,14 @@
+#pragma once
+
 #include "provider.h"
 #include <QImage>
 
 class Image : public Provider {
 private:
-  QImage image;
+  cv::Mat image;
 
 public:
-  explicit Image(const QImage &img) : image(img) {}
+  explicit Image(const cv::Mat &img) : image(img) {}
   void start() override;
   void stop() override;
 };
