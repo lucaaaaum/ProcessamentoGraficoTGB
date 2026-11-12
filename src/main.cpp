@@ -1,4 +1,5 @@
-#include "frontend/canvas.h"
+#include "ui/canvas.h"
+#include "processing/filter.h"
 #include <QApplication>
 #include <QFileDialog>
 #include <QLabel>
