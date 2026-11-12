@@ -16,6 +16,7 @@ private:
   void setupLayout();
   void setupConnections();
   void toggleCamera();
+  void importImage();
 
   bool cameraOn = false;
 

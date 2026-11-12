@@ -1,8 +1,12 @@
 #include "main_window.h"
 #include "capturing/camera.h"
+#include "capturing/image.h"
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QMenuBar>
+#include <QStandardPaths>
 #include <QVBoxLayout>
+#include <opencv2/imgcodecs.hpp>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   camera = new Camera(0);
@@ -37,9 +41,10 @@ void MainWindow::setupLayout() {
 
 void MainWindow::setupConnections() {
   connect(controller, &Controller::frameChanged, canvas, &Canvas::setMat);
+  connect(controller, &Controller::frameCleared, canvas, &Canvas::clear);
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
-  connect(controller, &Controller::frameCleared, canvas, &Canvas::clear);
+  connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
 }
 
 void MainWindow::toggleCamera() {
@@ -51,4 +56,23 @@ void MainWindow::toggleCamera() {
     toggleCameraButton->setText("Desligar");
   }
   cameraOn = !cameraOn;
+}
+
+void MainWindow::importImage() {
+  QString path = QFileDialog::getOpenFileName(
+      this, "Importar Arquivo",
+      QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
+      "Imagens (*.png *.jpg *.jpeg *.bmp)", nullptr,
+      QFileDialog::DontUseNativeDialog);
+  if (path.isEmpty()) {
+    return;
+  }
+
+  auto img = cv::imread(path.toStdString());
+  if (img.empty()) {
+    canvas->setMessage("Falha ao carregar a imagem.");
+    return;
+  }
+
+  controller->setProvider(new Image(img));
 }
