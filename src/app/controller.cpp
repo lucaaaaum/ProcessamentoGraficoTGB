@@ -18,6 +18,16 @@ void Controller::setProvider(Provider *prov) {
   provider->start();
 }
 
+void Controller::cleanProvider() {
+  if (provider) {
+    provider->stop();
+    disconnect(connection);
+    provider = nullptr;
+  }
+  lastFrame.release();
+  emit frameCleared();
+}
+
 void Controller::addFilter(const Filter &filter) {
   pipeline->addFilter(filter);
   render();

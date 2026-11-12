@@ -21,9 +21,11 @@ public:
   using QObject::QObject;
   Controller(QObject *parent = nullptr);
   void setProvider(Provider *prov);
+  void cleanProvider();
   void addFilter(const Filter &filter);
   std::vector<Filter> listPipelineFilters() const;
 
 signals:
   void frameChanged(const cv::Mat &frame);
+  void frameCleared();
 };
