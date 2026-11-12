@@ -6,11 +6,6 @@ Camera::Camera(int deviceIndex) : capture(deviceIndex, cv::CAP_V4L2) {
   if (!capture.isOpened()) {
     throw std::runtime_error("Erro ao abrir a câmera.");
   }
-}
-
-void Camera::start() {
-  capture.open(0, cv::CAP_V4L2);
-  timer.start(30);
   connect(&timer, &QTimer::timeout, this, [this]() {
     cv::Mat frame;
     capture >> frame;
@@ -18,6 +13,11 @@ void Camera::start() {
       emit frameChanged(frame);
     }
   });
+}
+
+void Camera::start() {
+  capture.open(0, cv::CAP_V4L2);
+  timer.start(30);
 }
 
 void Camera::stop() {
