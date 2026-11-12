@@ -12,3 +12,13 @@ void Pipeline::apply(cv::Mat &image) {
     tempFilters.pop();
   }
 }
+
+std::vector<Filter> Pipeline::listFilters() const {
+  std::vector<Filter> filterList;
+  std::queue<Filter> tempFilters = filters;
+  while (!tempFilters.empty()) {
+    filterList.push_back(tempFilters.front());
+    tempFilters.pop();
+  }
+  return filterList;
+}

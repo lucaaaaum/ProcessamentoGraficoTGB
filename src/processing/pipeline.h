@@ -11,4 +11,5 @@ public:
   Pipeline();
   void addFilter(const Filter &filter);
   void apply(cv::Mat &image);
+  std::vector<Filter> listFilters() const;
 };
