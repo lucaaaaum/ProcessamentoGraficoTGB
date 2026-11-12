@@ -13,6 +13,7 @@ public:
 
 public slots:
   void setMat(const cv::Mat &mat);
+  void clear();
   void setMessage(const QString &msg);
 
 protected:

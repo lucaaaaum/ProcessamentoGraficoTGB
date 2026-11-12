@@ -39,6 +39,7 @@ void MainWindow::setupConnections() {
   connect(controller, &Controller::frameChanged, canvas, &Canvas::setMat);
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
+  connect(controller, &Controller::frameCleared, canvas, &Canvas::clear);
 }
 
 void MainWindow::toggleCamera() {

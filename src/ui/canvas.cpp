@@ -14,6 +14,12 @@ void Canvas::setMat(const cv::Mat &mat) {
   update();
 }
 
+void Canvas::clear() {
+  image = QImage();
+  message.clear();
+  update();
+}
+
 void Canvas::setMessage(const QString &msg) {
   message = msg;
   update();
