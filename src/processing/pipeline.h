@@ -8,6 +8,7 @@ private:
   std::queue<Filter> filters;
 
 public:
+  Pipeline();
   void addFilter(const Filter &filter);
   void apply(cv::Mat &image);
 };
