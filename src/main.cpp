@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
   auto canvas = new Canvas;
   mainLayout->addWidget(canvas, 1);
 
+  canvas->setMessage("Aguardando a câmera...");
   cv::VideoCapture capture(0, cv::CAP_V4L2);
   if (!capture.isOpened()) {
     canvas->setMessage("Erro ao abrir a câmera.");
