@@ -1,3 +1,4 @@
+#include "frontend/canvas.h"
 #include <QApplication>
 #include <QFileDialog>
 #include <QLabel>
@@ -13,8 +14,6 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/videoio.hpp>
 
-void showMat(const cv::Mat &mat, QLabel *canvas);
-
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
   QMainWindow window;
@@ -25,14 +24,12 @@ int main(int argc, char *argv[]) {
   QMenu *fileMenu = window.menuBar()->addMenu("&Arquivo");
   QAction *importAction = fileMenu->addAction("&Importar");
 
-  auto *canvas = new QLabel("Abrindo câmera...");
-  canvas->setAlignment(Qt::AlignCenter);
-  canvas->setMinimumSize(640, 480);
+  auto canvas = new Canvas;
   mainLayout->addWidget(canvas, 1);
 
   cv::VideoCapture capture(0, cv::CAP_V4L2);
   if (!capture.isOpened()) {
-    canvas->setText("Erro ao abrir a câmera.");
+    canvas->setMessage("Erro ao abrir a câmera.");
   }
 
   QTimer timer;
@@ -41,7 +38,7 @@ int main(int argc, char *argv[]) {
     if (!capture.read(frame) || frame.empty()) {
       return;
     }
-    showMat(frame, canvas);
+    canvas->setMat(frame);
   });
   timer.start(30);
 
@@ -63,7 +60,7 @@ int main(int argc, char *argv[]) {
     }
     timer.stop();
 
-    showMat(img, canvas);
+    canvas->setMat(img);
   });
 
   auto *buttons = new QHBoxLayout();
@@ -77,13 +74,4 @@ int main(int argc, char *argv[]) {
   window.show();
 
   return app.exec();
-}
-
-void showMat(const cv::Mat &mat, QLabel *canvas) {
-  cv::Mat rgb;
-  cv::cvtColor(mat, rgb, cv::COLOR_BGR2RGB);
-  QImage image(rgb.data, rgb.cols, rgb.rows, static_cast<int>(rgb.step),
-               QImage::Format_RGB888);
-  canvas->setPixmap(QPixmap::fromImage(image).scaled(
-      canvas->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
