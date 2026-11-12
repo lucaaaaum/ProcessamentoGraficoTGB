@@ -13,4 +13,5 @@ find_package(OpenCV REQUIRED)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h src/*.ui src/*.qrc)
 
 add_executable(tgb ${SOURCES})
+target_include_directories(tgb PRIVATE src)
 target_link_libraries(tgb PRIVATE Qt6::Widgets Qt6::OpenGLWidgets ${OpenCV_LIBS})
