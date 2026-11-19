@@ -5,13 +5,16 @@
 
 class Filter {
 private:
-  char *name;
+  std::string name;
   std::function<void(cv::Mat &)> filterFunction;
 
 public:
-  Filter(char *name, std::function<void(cv::Mat &)> func)
+  Filter(std::string name, std::function<void(cv::Mat &)> func)
       : name(name), filterFunction(func) {}
+
   void apply(cv::Mat &image);
+
+  std::string getName() const { return name; }
 
   static Filter grayScaleFilter() {
     return Filter("Gray Scale", [](cv::Mat &image) {
