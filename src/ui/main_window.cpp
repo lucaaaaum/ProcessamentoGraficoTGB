@@ -1,6 +1,7 @@
 #include "main_window.h"
 #include "capturing/camera.h"
 #include "capturing/image.h"
+#include "ui/preset_dialog.h"
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QHBoxLayout>
@@ -49,6 +50,16 @@ void MainWindow::setupConnections() {
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
   connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
+  connect(pipelineWidget, &PipelineWidget::addFilterRequested, this, [this]() {
+    PresetDialog dialog(this);
+    if (dialog.exec() != QDialog::Accepted) {
+      return;
+    }
+    auto filter = dialog.getSelectedFilter();
+    if (filter) {
+      controller->addFilter(*filter);
+    }
+  });
 }
 
 void MainWindow::toggleCamera() {
