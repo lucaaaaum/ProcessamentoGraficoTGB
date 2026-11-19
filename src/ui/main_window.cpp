@@ -1,6 +1,7 @@
 #include "main_window.h"
 #include "capturing/camera.h"
 #include "capturing/image.h"
+#include <QDockWidget>
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QMenuBar>
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   takePictureButton = new QPushButton("Tirar Foto");
   toggleCameraButton = new QPushButton("Ligar");
   setupMenu();
+  setupPipelineDock();
   setupLayout();
   setupConnections();
 }
@@ -42,6 +44,8 @@ void MainWindow::setupLayout() {
 void MainWindow::setupConnections() {
   connect(controller, &Controller::frameChanged, canvas, &Canvas::setMat);
   connect(controller, &Controller::frameCleared, canvas, &Canvas::clear);
+  connect(controller, &Controller::pipelineChanged, pipelineWidget,
+          &PipelineWidget::setFilters);
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
   connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
@@ -75,4 +79,11 @@ void MainWindow::importImage() {
   }
 
   controller->setProvider(new Image(img));
+}
+
+void MainWindow::setupPipelineDock() {
+  pipelineDock = new QDockWidget("Pipeline", this);
+  pipelineWidget = new PipelineWidget;
+  pipelineDock->setWidget(pipelineWidget);
+  addDockWidget(Qt::RightDockWidgetArea, pipelineDock);
 }

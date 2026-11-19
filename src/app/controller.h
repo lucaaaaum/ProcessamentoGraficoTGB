@@ -28,4 +28,5 @@ public:
 signals:
   void frameChanged(const cv::Mat &frame);
   void frameCleared();
+  void pipelineChanged(const std::vector<Filter> filters);
 };

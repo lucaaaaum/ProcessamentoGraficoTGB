@@ -3,6 +3,7 @@
 #include "app/controller.h"
 #include "capturing/camera.h"
 #include "ui/canvas.h"
+#include "ui/pipeline_widget.h"
 #include <QMainWindow>
 #include <qpushbutton.h>
 
@@ -14,6 +15,7 @@ public:
 private:
   void setupMenu();
   void setupLayout();
+  void setupPipelineDock();
   void setupConnections();
   void toggleCamera();
   void importImage();
@@ -26,4 +28,6 @@ private:
   QPushButton *takePictureButton;
   QPushButton *toggleCameraButton;
   QAction *importAction;
+  QDockWidget *pipelineDock;
+  PipelineWidget *pipelineWidget;
 };

@@ -30,6 +30,7 @@ void Controller::cleanProvider() {
 
 void Controller::addFilter(const Filter &filter) {
   pipeline->addFilter(filter);
+  emit pipelineChanged(pipeline->listFilters());
   render();
 }
 
