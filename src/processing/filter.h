@@ -16,10 +16,20 @@ public:
 
   std::string getName() const { return name; }
 
+  static std::vector<Filter> presets() {
+    return {grayScaleFilter(), blurFilter()};
+  }
+
   static Filter grayScaleFilter() {
     return Filter("Gray Scale", [](cv::Mat &image) {
       cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
       cv::cvtColor(image, image, cv::COLOR_GRAY2BGR);
+    });
+  }
+
+  static Filter blurFilter() {
+    return Filter("Blur", [](cv::Mat &image) {
+      cv::GaussianBlur(image, image, cv::Size(5, 5), 0);
     });
   }
 };
