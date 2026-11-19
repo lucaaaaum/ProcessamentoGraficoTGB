@@ -60,6 +60,10 @@ void MainWindow::setupConnections() {
       controller->addFilter(*filter);
     }
   });
+  connect(pipelineWidget, &PipelineWidget::removeFilterRequested, controller,
+          &Controller::removeFilter);
+  connect(pipelineWidget, &PipelineWidget::moveFilterRequested, controller,
+          &Controller::moveFilter);
 }
 
 void MainWindow::toggleCamera() {

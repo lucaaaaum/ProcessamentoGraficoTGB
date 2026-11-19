@@ -34,6 +34,18 @@ void Controller::addFilter(const Filter &filter) {
   render();
 }
 
+void Controller::removeFilter(int index) {
+  pipeline->removeFilter(index);
+  emit pipelineChanged(pipeline->listFilters());
+  render();
+}
+
+void Controller::moveFilter(int fromIndex, int toIndex) {
+  pipeline->moveFilter(fromIndex, toIndex);
+  emit pipelineChanged(pipeline->listFilters());
+  render();
+}
+
 void Controller::render() {
   if (lastFrame.empty())
     return;

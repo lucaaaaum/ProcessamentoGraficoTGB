@@ -19,4 +19,6 @@ public:
 
 signals:
   void addFilterRequested();
+  void removeFilterRequested(int index);
+  void moveFilterRequested(int fromIndex, int toIndex);
 };

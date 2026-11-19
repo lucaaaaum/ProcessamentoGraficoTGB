@@ -23,6 +23,8 @@ public:
   void setProvider(Provider *prov);
   void cleanProvider();
   void addFilter(const Filter &filter);
+  void removeFilter(int index);
+  void moveFilter(int fromIndex, int toIndex);
   std::vector<Filter> listPipelineFilters() const;
 
 signals:

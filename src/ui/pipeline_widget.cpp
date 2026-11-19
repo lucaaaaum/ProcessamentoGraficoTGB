@@ -19,6 +19,13 @@ void PipelineWidget::setFilters(const std::vector<Filter> &filters) {
     delete item;
   }
   for (int i = 0; i < static_cast<int>(filters.size()); ++i) {
-    filtersLayout->addWidget(new FilterWidget(filters[i], i));
+    auto *filterWidget = new FilterWidget(filters[i], i);
+    connect(filterWidget, &FilterWidget::removeRequested, this,
+            &PipelineWidget::removeFilterRequested);
+    connect(filterWidget, &FilterWidget::moveUpRequested, this,
+            [this, i]() { emit moveFilterRequested(i, i - 1); });
+    connect(filterWidget, &FilterWidget::moveDownRequested, this,
+            [this, i]() { emit moveFilterRequested(i, i + 1); });
+    filtersLayout->addWidget(filterWidget);
   }
 }
