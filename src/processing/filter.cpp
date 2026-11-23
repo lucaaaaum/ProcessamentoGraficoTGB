@@ -27,7 +27,6 @@ void Filter::apply(cv::Mat &image) {
 
   for (int i = 0; i < static_cast<int>(planes.size()); ++i) {
     if (!hasFlag(channels, channelAt(i))) {
-      planes[i] = cv::Mat::zeros(planes[i].size(), planes[i].type());
       continue;
     }
     cv::Mat single;
