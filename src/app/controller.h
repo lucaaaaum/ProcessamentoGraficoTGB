@@ -26,6 +26,7 @@ public:
   void cleanProvider();
   void addFilter(const Filter &filter);
   void removeFilter(int index);
+  void clearFilters();
   void moveFilter(int fromIndex, int toIndex);
   void setFilterChannels(int index, Channel channels);
   void setDisplayChannels(Channel channels);

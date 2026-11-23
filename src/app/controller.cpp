@@ -40,6 +40,12 @@ void Controller::removeFilter(int index) {
   render();
 }
 
+void Controller::clearFilters() {
+  pipeline->clear();
+  emit pipelineChanged(pipeline->listFilters());
+  render();
+}
+
 void Controller::moveFilter(int fromIndex, int toIndex) {
   pipeline->moveFilter(fromIndex, toIndex);
   emit pipelineChanged(pipeline->listFilters());
