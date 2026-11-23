@@ -21,6 +21,12 @@ void Pipeline::moveFilter(int fromIndex, int toIndex) {
   }
 }
 
+void Pipeline::setFilterChannels(int index, Channel channels) {
+  if (index >= 0 && index < filters.size()) {
+    filters[index].setChannels(channels);
+  }
+}
+
 void Pipeline::apply(cv::Mat &image) {
   for (auto &filter : filters) {
     filter.apply(image);

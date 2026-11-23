@@ -12,6 +12,7 @@ public:
   void removeFilter(int index);
   void clear();
   void moveFilter(int fromIndex, int toIndex);
+  void setFilterChannels(int index, Channel channels);
   void apply(cv::Mat &image);
   std::vector<Filter> listFilters() const;
 };
