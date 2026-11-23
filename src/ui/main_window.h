@@ -4,6 +4,7 @@
 #include "capturing/camera.h"
 #include "ui/canvas.h"
 #include "ui/pipeline_widget.h"
+#include <QComboBox>
 #include <QMainWindow>
 #include <qpushbutton.h>
 
@@ -29,6 +30,7 @@ private:
   Canvas *canvas;
   QPushButton *takePictureButton;
   QPushButton *toggleCameraButton;
+  QComboBox *displayChannelBox;
   QAction *importAction;
   QDockWidget *pipelineDock;
   PipelineWidget *pipelineWidget;

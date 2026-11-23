@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QStandardPaths>
@@ -18,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   canvas = new Canvas;
   takePictureButton = new QPushButton("Tirar Foto");
   toggleCameraButton = new QPushButton("Ligar");
+  displayChannelBox = new QComboBox;
+  displayChannelBox->addItem("Todos", static_cast<int>(Channel::All));
+  displayChannelBox->addItem("R", static_cast<int>(Channel::Red));
+  displayChannelBox->addItem("G", static_cast<int>(Channel::Green));
+  displayChannelBox->addItem("B", static_cast<int>(Channel::Blue));
   setupMenu();
   setupPipelineDock();
   setupLayout();
@@ -42,6 +48,8 @@ void MainWindow::setupLayout() {
   imageLayout->addLayout(buttons);
   buttons->addWidget(takePictureButton);
   buttons->addWidget(toggleCameraButton);
+  buttons->addWidget(new QLabel("Exibir canal:"));
+  buttons->addWidget(displayChannelBox);
 }
 
 void MainWindow::setupConnections() {
@@ -60,6 +68,10 @@ void MainWindow::setupConnections() {
           &Controller::moveFilter);
   connect(pipelineWidget, &PipelineWidget::filterChannelsChangeRequested,
           controller, &Controller::setFilterChannels);
+  connect(displayChannelBox, &QComboBox::currentIndexChanged, this, [this]() {
+    controller->setDisplayChannels(
+        static_cast<Channel>(displayChannelBox->currentData().toInt()));
+  });
 }
 
 void MainWindow::toggleCamera() {
