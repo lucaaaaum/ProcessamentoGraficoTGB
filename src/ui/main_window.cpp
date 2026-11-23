@@ -64,6 +64,8 @@ void MainWindow::setupConnections() {
           &Controller::removeFilter);
   connect(pipelineWidget, &PipelineWidget::moveFilterRequested, controller,
           &Controller::moveFilter);
+  connect(pipelineWidget, &PipelineWidget::filterChannelsChangeRequested,
+          controller, &Controller::setFilterChannels);
 }
 
 void MainWindow::toggleCamera() {

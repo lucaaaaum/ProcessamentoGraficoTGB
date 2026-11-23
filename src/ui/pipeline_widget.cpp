@@ -26,6 +26,8 @@ void PipelineWidget::setFilters(const std::vector<Filter> &filters) {
             [this, i]() { emit moveFilterRequested(i, i - 1); });
     connect(filterWidget, &FilterWidget::moveDownRequested, this,
             [this, i]() { emit moveFilterRequested(i, i + 1); });
+    connect(filterWidget, &FilterWidget::channelsChanged, this,
+            &PipelineWidget::filterChannelsChangeRequested);
     filtersLayout->addWidget(filterWidget);
   }
 }

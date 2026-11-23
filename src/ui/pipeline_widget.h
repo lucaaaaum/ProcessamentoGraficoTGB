@@ -21,4 +21,5 @@ signals:
   void addFilterRequested();
   void removeFilterRequested(int index);
   void moveFilterRequested(int fromIndex, int toIndex);
+  void filterChannelsChangeRequested(int index, Channel channels);
 };
