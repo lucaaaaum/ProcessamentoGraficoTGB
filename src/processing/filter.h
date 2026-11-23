@@ -9,12 +9,25 @@ private:
   std::string name;
   std::string description;
   std::function<void(cv::Mat &)> filterFunction;
+  std::function<void(cv::Mat &, const cv::Mat &)> operation;
+  cv::Mat operand;
+  std::string operandName;
   Channel channels = Channel::All;
+
+  void run(cv::Mat &image);
 
 public:
   Filter(std::string name, std::string description,
          std::function<void(cv::Mat &)> func)
       : name(name), description(description), filterFunction(func) {}
+
+  static Filter
+  operationFilter(std::string name, std::string description,
+                  std::function<void(cv::Mat &, const cv::Mat &)> op) {
+    Filter filter(name, description, nullptr);
+    filter.operation = op;
+    return filter;
+  }
 
   void apply(cv::Mat &image);
 
@@ -25,6 +38,15 @@ public:
   Channel getChannels() const { return channels; }
 
   void setChannels(Channel value) { channels = value; }
+
+  bool requiresOperand() const { return static_cast<bool>(operation); }
+
+  std::string getOperandName() const { return operandName; }
+
+  void setOperand(const cv::Mat &image, const std::string &imageName) {
+    operand = image;
+    operandName = imageName;
+  }
 
   static std::vector<Filter> presets() {
     return {grayScaleFilter(), blurFilter(),      boxBlurFilter(),

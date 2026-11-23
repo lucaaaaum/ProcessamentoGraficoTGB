@@ -1,9 +1,24 @@
 #include "filter.h"
 #include <opencv2/core.hpp>
 
+void Filter::run(cv::Mat &image) {
+  if (!operation) {
+    filterFunction(image);
+    return;
+  }
+  if (operand.empty()) {
+    return;
+  }
+  cv::Mat resized = operand;
+  if (operand.size() != image.size()) {
+    cv::resize(operand, resized, image.size());
+  }
+  operation(image, resized);
+}
+
 void Filter::apply(cv::Mat &image) {
   if (channels == Channel::All) {
-    filterFunction(image);
+    run(image);
     return;
   }
 
@@ -17,7 +32,7 @@ void Filter::apply(cv::Mat &image) {
     }
     cv::Mat single;
     cv::merge(std::vector<cv::Mat>{planes[i], planes[i], planes[i]}, single);
-    filterFunction(single);
+    run(single);
     cv::extractChannel(single, planes[i], i);
   }
 
