@@ -4,8 +4,10 @@
 #include "ui/preset_dialog.h"
 #include <QDockWidget>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QHBoxLayout>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QStandardPaths>
 #include <QVBoxLayout>
 #include <opencv2/imgcodecs.hpp>
@@ -50,16 +52,8 @@ void MainWindow::setupConnections() {
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
   connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
-  connect(pipelineWidget, &PipelineWidget::addFilterRequested, this, [this]() {
-    PresetDialog dialog(this);
-    if (dialog.exec() != QDialog::Accepted) {
-      return;
-    }
-    auto filter = dialog.getSelectedFilter();
-    if (filter) {
-      controller->addFilter(*filter);
-    }
-  });
+  connect(pipelineWidget, &PipelineWidget::addFilterRequested, this,
+          &MainWindow::addFilterFromPreset);
   connect(pipelineWidget, &PipelineWidget::removeFilterRequested, controller,
           &Controller::removeFilter);
   connect(pipelineWidget, &PipelineWidget::moveFilterRequested, controller,
@@ -79,12 +73,42 @@ void MainWindow::toggleCamera() {
   cameraOn = !cameraOn;
 }
 
-void MainWindow::importImage() {
-  QString path = QFileDialog::getOpenFileName(
-      this, "Importar Arquivo",
+QString MainWindow::chooseImageFile(const QString &title) {
+  return QFileDialog::getOpenFileName(
+      this, title,
       QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
       "Imagens (*.png *.jpg *.jpeg *.bmp)", nullptr,
       QFileDialog::DontUseNativeDialog);
+}
+
+void MainWindow::addFilterFromPreset() {
+  PresetDialog dialog(this);
+  if (dialog.exec() != QDialog::Accepted) {
+    return;
+  }
+  auto filter = dialog.getSelectedFilter();
+  if (!filter) {
+    return;
+  }
+
+  if (filter->requiresOperand()) {
+    QString path = chooseImageFile("Escolher Segunda Imagem");
+    if (path.isEmpty()) {
+      return;
+    }
+    auto operand = cv::imread(path.toStdString());
+    if (operand.empty()) {
+      QMessageBox::warning(this, "Erro", "Falha ao carregar a imagem.");
+      return;
+    }
+    filter->setOperand(operand, QFileInfo(path).fileName().toStdString());
+  }
+
+  controller->addFilter(*filter);
+}
+
+void MainWindow::importImage() {
+  QString path = chooseImageFile("Importar Arquivo");
   if (path.isEmpty()) {
     return;
   }

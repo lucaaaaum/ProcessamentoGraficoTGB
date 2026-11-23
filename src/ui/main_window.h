@@ -19,6 +19,8 @@ private:
   void setupConnections();
   void toggleCamera();
   void importImage();
+  void addFilterFromPreset();
+  QString chooseImageFile(const QString &title);
 
   bool cameraOn = false;
 
