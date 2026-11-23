@@ -21,7 +21,12 @@ void FilterWidget::setupLayout(const Filter &filter) {
   moveDownButton = new QPushButton("↓");
   removeButton = new QPushButton("✕");
 
-  header->addWidget(new QLabel(QString::fromStdString(filter.getName())), 1);
+  QString title = QString::fromStdString(filter.getName());
+  if (filter.requiresOperand()) {
+    title += QString(" (%1)").arg(
+        QString::fromStdString(filter.getOperandName()));
+  }
+  header->addWidget(new QLabel(title), 1);
   header->addWidget(moveUpButton);
   header->addWidget(moveDownButton);
   header->addWidget(removeButton);
