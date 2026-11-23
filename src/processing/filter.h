@@ -49,10 +49,49 @@ public:
   }
 
   static std::vector<Filter> presets() {
-    return {grayScaleFilter(), blurFilter(),      boxBlurFilter(),
-            medianFilter(),    sharpenFilter(),   laplacianFilter(),
-            cannyFilter(),     negativeFilter(),  thresholdFilter(),
-            brightnessContrastFilter()};
+    return {grayScaleFilter(),   blurFilter(),
+            boxBlurFilter(),     medianFilter(),
+            sharpenFilter(),     laplacianFilter(),
+            cannyFilter(),       negativeFilter(),
+            thresholdFilter(),   brightnessContrastFilter(),
+            additionOperation(), subtractionOperation(),
+            blendingOperation()};
+  }
+
+  static Filter additionOperation() {
+    return operationFilter(
+        "Adição",
+        "Soma pixel a pixel a imagem atual com uma segunda imagem escolhida "
+        "do disco. Valores acima de 255 ficam em 255, então o resultado "
+        "tende a clarear. Parâmetro: segunda imagem, redimensionada para o "
+        "tamanho da atual.",
+        [](cv::Mat &image, const cv::Mat &other) {
+          cv::add(image, other, image);
+        });
+  }
+
+  static Filter subtractionOperation() {
+    return operationFilter(
+        "Subtração",
+        "Subtrai pixel a pixel uma segunda imagem escolhida do disco da "
+        "imagem atual. Valores abaixo de 0 ficam em 0, então só sobram as "
+        "regiões mais claras que a segunda imagem. Parâmetro: segunda "
+        "imagem, redimensionada para o tamanho da atual.",
+        [](cv::Mat &image, const cv::Mat &other) {
+          cv::subtract(image, other, image);
+        });
+  }
+
+  static Filter blendingOperation() {
+    return operationFilter(
+        "Blending",
+        "Mistura a imagem atual com uma segunda imagem escolhida do disco "
+        "pela fórmula alfa * atual + beta * segunda. Parâmetros: segunda "
+        "imagem, redimensionada para o tamanho da atual, alfa (0.5) e beta "
+        "(0.5).",
+        [](cv::Mat &image, const cv::Mat &other) {
+          cv::addWeighted(image, 0.5, other, 0.5, 0, image);
+        });
   }
 
   static Filter grayScaleFilter() {
