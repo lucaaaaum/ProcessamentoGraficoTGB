@@ -31,8 +31,11 @@ void FilterWidget::setupLayout(const Filter &filter) {
   header->addWidget(moveDownButton);
   header->addWidget(removeButton);
 
-  auto *channelsRow = new QHBoxLayout();
-  layout->addLayout(channelsRow);
+  auto *channelsPanel = new QWidget;
+  auto *channelsRow = new QHBoxLayout(channelsPanel);
+  channelsRow->setContentsMargins(0, 0, 0, 0);
+  layout->addWidget(channelsPanel);
+  channelsPanel->setVisible(filter.supportsChannelSelection());
 
   redCheckBox = new QCheckBox("R");
   greenCheckBox = new QCheckBox("G");

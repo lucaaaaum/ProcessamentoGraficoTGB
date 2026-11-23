@@ -13,6 +13,7 @@ private:
   cv::Mat operand;
   std::string operandName;
   Channel channels = Channel::All;
+  bool channelSelectable = true;
 
   void run(cv::Mat &image);
 
@@ -37,7 +38,13 @@ public:
 
   Channel getChannels() const { return channels; }
 
-  void setChannels(Channel value) { channels = value; }
+  void setChannels(Channel value) {
+    if (channelSelectable) {
+      channels = value;
+    }
+  }
+
+  bool supportsChannelSelection() const { return channelSelectable; }
 
   bool requiresOperand() const { return static_cast<bool>(operation); }
 
@@ -95,13 +102,16 @@ public:
   }
 
   static Filter grayScaleFilter() {
-    return Filter("Gray Scale",
+    Filter filter("Gray Scale",
                   "Converte a imagem para tons de cinza, combinando os canais "
-                  "B, G e R pela luminância de cada pixel. Sem parâmetros.",
+                  "B, G e R pela luminância de cada pixel. Atua sempre nos "
+                  "três canais. Sem parâmetros.",
                   [](cv::Mat &image) {
                     cv::cvtColor(image, image, cv::COLOR_BGR2GRAY);
                     cv::cvtColor(image, image, cv::COLOR_GRAY2BGR);
                   });
+    filter.channelSelectable = false;
+    return filter;
   }
 
   static Filter blurFilter() {
