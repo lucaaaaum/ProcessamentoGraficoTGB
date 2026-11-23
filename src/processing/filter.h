@@ -1,4 +1,5 @@
 #pragma once
+#include "channel.h"
 #include <functional>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
@@ -8,6 +9,7 @@ private:
   std::string name;
   std::string description;
   std::function<void(cv::Mat &)> filterFunction;
+  Channel channels = Channel::All;
 
 public:
   Filter(std::string name, std::string description,
@@ -19,6 +21,10 @@ public:
   std::string getName() const { return name; }
 
   std::string getDescription() const { return description; }
+
+  Channel getChannels() const { return channels; }
+
+  void setChannels(Channel value) { channels = value; }
 
   static std::vector<Filter> presets() {
     return {grayScaleFilter(), blurFilter(),      boxBlurFilter(),
