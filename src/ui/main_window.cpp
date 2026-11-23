@@ -62,6 +62,8 @@ void MainWindow::setupConnections() {
   connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
   connect(pipelineWidget, &PipelineWidget::addFilterRequested, this,
           &MainWindow::addFilterFromPreset);
+  connect(pipelineWidget, &PipelineWidget::resetRequested, controller,
+          &Controller::clearFilters);
   connect(pipelineWidget, &PipelineWidget::removeFilterRequested, controller,
           &Controller::removeFilter);
   connect(pipelineWidget, &PipelineWidget::moveFilterRequested, controller,

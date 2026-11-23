@@ -7,9 +7,14 @@ PipelineWidget::PipelineWidget(QWidget *parent) : QWidget(parent) {
   filtersLayout = new QVBoxLayout();
   layout->addLayout(filtersLayout);
   layout->addStretch();
-  layout->addWidget(addFilterButton = new QPushButton("Adicionar Filtro"));
+  auto *buttons = new QHBoxLayout();
+  layout->addLayout(buttons);
+  buttons->addWidget(addFilterButton = new QPushButton("Adicionar Filtro"));
+  buttons->addWidget(resetButton = new QPushButton("Resetar"));
   connect(addFilterButton, &QPushButton::clicked, this,
           &PipelineWidget::addFilterRequested);
+  connect(resetButton, &QPushButton::clicked, this,
+          &PipelineWidget::resetRequested);
 }
 void PipelineWidget::setFilters(const std::vector<Filter> &filters) {
   while (QLayoutItem *item = filtersLayout->takeAt(0)) {

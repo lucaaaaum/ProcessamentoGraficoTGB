@@ -12,6 +12,7 @@ private:
   QVBoxLayout *layout;
   QVBoxLayout *filtersLayout;
   QPushButton *addFilterButton;
+  QPushButton *resetButton;
 
 public:
   PipelineWidget(QWidget *parent = nullptr);
@@ -19,6 +20,7 @@ public:
 
 signals:
   void addFilterRequested();
+  void resetRequested();
   void removeFilterRequested(int index);
   void moveFilterRequested(int fromIndex, int toIndex);
   void filterChannelsChangeRequested(int index, Channel channels);
