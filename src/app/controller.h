@@ -25,6 +25,7 @@ public:
   void addFilter(const Filter &filter);
   void removeFilter(int index);
   void moveFilter(int fromIndex, int toIndex);
+  void setFilterChannels(int index, Channel channels);
   std::vector<Filter> listPipelineFilters() const;
 
 signals:

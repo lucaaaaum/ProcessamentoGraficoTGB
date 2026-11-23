@@ -46,6 +46,11 @@ void Controller::moveFilter(int fromIndex, int toIndex) {
   render();
 }
 
+void Controller::setFilterChannels(int index, Channel channels) {
+  pipeline->setFilterChannels(index, channels);
+  render();
+}
+
 void Controller::render() {
   if (lastFrame.empty())
     return;
