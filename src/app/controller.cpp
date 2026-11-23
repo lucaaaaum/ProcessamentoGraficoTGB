@@ -51,12 +51,32 @@ void Controller::setFilterChannels(int index, Channel channels) {
   render();
 }
 
+void Controller::setDisplayChannels(Channel channels) {
+  displayChannels = channels;
+  render();
+}
+
 void Controller::render() {
   if (lastFrame.empty())
     return;
   auto outputFrame = lastFrame.clone();
   pipeline->apply(outputFrame);
+  isolateDisplayChannels(outputFrame);
   emit frameChanged(outputFrame);
+}
+
+void Controller::isolateDisplayChannels(cv::Mat &frame) const {
+  if (displayChannels == Channel::All) {
+    return;
+  }
+  std::vector<cv::Mat> planes;
+  cv::split(frame, planes);
+  for (int i = 0; i < static_cast<int>(planes.size()); ++i) {
+    if (!hasFlag(displayChannels, channelAt(i))) {
+      planes[i].setTo(0);
+    }
+  }
+  cv::merge(planes, frame);
 }
 
 std::vector<Filter> Controller::listPipelineFilters() const {
