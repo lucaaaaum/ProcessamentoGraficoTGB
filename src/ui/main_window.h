@@ -19,6 +19,8 @@ private:
   void setupPipelineDock();
   void setupConnections();
   void toggleCamera();
+  void takePicture();
+  void setCameraOn(bool on);
   void importImage();
   void addFilterFromPreset();
   void saveImage();

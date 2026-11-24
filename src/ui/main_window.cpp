@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   controller = new Controller(this);
   canvas = new Canvas;
   takePictureButton = new QPushButton("Tirar Foto");
+  takePictureButton->setEnabled(false);
   toggleCameraButton = new QPushButton("Ligar");
   saveButton = new QPushButton("Salvar");
   displayChannelBox = new QComboBox;
@@ -61,6 +62,8 @@ void MainWindow::setupConnections() {
           &PipelineWidget::setFilters);
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
+  connect(takePictureButton, &QPushButton::clicked, this,
+          &MainWindow::takePicture);
   connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
   connect(saveButton, &QPushButton::clicked, this, &MainWindow::saveImage);
   connect(pipelineWidget, &PipelineWidget::addFilterRequested, this,
@@ -79,15 +82,27 @@ void MainWindow::setupConnections() {
   });
 }
 
+void MainWindow::setCameraOn(bool on) {
+  cameraOn = on;
+  toggleCameraButton->setText(on ? "Desligar" : "Ligar");
+  takePictureButton->setEnabled(on);
+}
+
 void MainWindow::toggleCamera() {
   if (cameraOn) {
     controller->cleanProvider();
-    toggleCameraButton->setText("Ligar");
   } else {
     controller->setProvider(camera);
-    toggleCameraButton->setText("Desligar");
   }
-  cameraOn = !cameraOn;
+  setCameraOn(!cameraOn);
+}
+
+void MainWindow::takePicture() {
+  if (!cameraOn) {
+    return;
+  }
+  controller->freezeFrame();
+  setCameraOn(false);
 }
 
 QString MainWindow::chooseImageFile(const QString &title) {
@@ -169,6 +184,7 @@ void MainWindow::importImage() {
   }
 
   controller->setProvider(new Image(img));
+  setCameraOn(false);
 }
 
 void MainWindow::setupPipelineDock() {
