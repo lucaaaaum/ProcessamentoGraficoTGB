@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   canvas = new Canvas;
   takePictureButton = new QPushButton("Tirar Foto");
   toggleCameraButton = new QPushButton("Ligar");
+  saveButton = new QPushButton("Salvar");
   displayChannelBox = new QComboBox;
   displayChannelBox->addItem("Todos", static_cast<int>(Channel::All));
   displayChannelBox->addItem("R", static_cast<int>(Channel::Red));
@@ -48,6 +49,7 @@ void MainWindow::setupLayout() {
   imageLayout->addLayout(buttons);
   buttons->addWidget(takePictureButton);
   buttons->addWidget(toggleCameraButton);
+  buttons->addWidget(saveButton);
   buttons->addWidget(new QLabel("Exibir canal:"));
   buttons->addWidget(displayChannelBox);
 }
@@ -60,6 +62,7 @@ void MainWindow::setupConnections() {
   connect(toggleCameraButton, &QPushButton::clicked, this,
           &MainWindow::toggleCamera);
   connect(importAction, &QAction::triggered, this, &MainWindow::importImage);
+  connect(saveButton, &QPushButton::clicked, this, &MainWindow::saveImage);
   connect(pipelineWidget, &PipelineWidget::addFilterRequested, this,
           &MainWindow::addFilterFromPreset);
   connect(pipelineWidget, &PipelineWidget::resetRequested, controller,
@@ -119,6 +122,38 @@ void MainWindow::addFilterFromPreset() {
   }
 
   controller->addFilter(*filter);
+}
+
+void MainWindow::saveImage() {
+  cv::Mat output = controller->currentOutput();
+  if (output.empty()) {
+    QMessageBox::warning(this, "Erro", "Não há imagem para salvar.");
+    return;
+  }
+
+  QString defaultPath =
+      QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
+      "/imagem.png";
+  QString path = QFileDialog::getSaveFileName(
+      this, "Salvar Imagem", defaultPath,
+      "PNG (*.png);;JPEG (*.jpg *.jpeg)", nullptr,
+      QFileDialog::DontUseNativeDialog);
+  if (path.isEmpty()) {
+    return;
+  }
+  if (QFileInfo(path).suffix().isEmpty()) {
+    path += ".png";
+  }
+
+  bool saved = false;
+  try {
+    saved = cv::imwrite(path.toStdString(), output);
+  } catch (const cv::Exception &) {
+    saved = false;
+  }
+  if (!saved) {
+    QMessageBox::warning(this, "Erro", "Falha ao salvar a imagem.");
+  }
 }
 
 void MainWindow::importImage() {

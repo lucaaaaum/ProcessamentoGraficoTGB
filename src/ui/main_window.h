@@ -21,6 +21,7 @@ private:
   void toggleCamera();
   void importImage();
   void addFilterFromPreset();
+  void saveImage();
   QString chooseImageFile(const QString &title);
 
   bool cameraOn = false;
@@ -30,6 +31,7 @@ private:
   Canvas *canvas;
   QPushButton *takePictureButton;
   QPushButton *toggleCameraButton;
+  QPushButton *saveButton;
   QComboBox *displayChannelBox;
   QAction *importAction;
   QDockWidget *pipelineDock;
