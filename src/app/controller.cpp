@@ -1,4 +1,5 @@
 #include "controller.h"
+#include "capturing/image.h"
 #include <qtmetamacros.h>
 
 Controller::Controller(QObject *parent)
@@ -27,6 +28,13 @@ void Controller::cleanProvider() {
   lastFrame.release();
   lastOutput.release();
   emit frameCleared();
+}
+
+void Controller::freezeFrame() {
+  if (lastFrame.empty()) {
+    return;
+  }
+  setProvider(new Image(lastFrame.clone()));
 }
 
 void Controller::addFilter(const Filter &filter) {

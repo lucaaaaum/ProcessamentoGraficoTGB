@@ -25,6 +25,7 @@ public:
   Controller(QObject *parent = nullptr);
   void setProvider(Provider *prov);
   void cleanProvider();
+  void freezeFrame();
   void addFilter(const Filter &filter);
   void removeFilter(int index);
   void clearFilters();
