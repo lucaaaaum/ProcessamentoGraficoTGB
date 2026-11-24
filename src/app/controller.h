@@ -15,6 +15,7 @@ private:
   Pipeline *pipeline;
   QMetaObject::Connection connection;
   cv::Mat lastFrame;
+  cv::Mat lastOutput;
   Channel displayChannels = Channel::All;
   void render();
   void isolateDisplayChannels(cv::Mat &frame) const;
@@ -31,6 +32,7 @@ public:
   void setFilterChannels(int index, Channel channels);
   void setDisplayChannels(Channel channels);
   std::vector<Filter> listPipelineFilters() const;
+  cv::Mat currentOutput() const;
 
 signals:
   void frameChanged(const cv::Mat &frame);

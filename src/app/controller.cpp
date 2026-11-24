@@ -25,6 +25,7 @@ void Controller::cleanProvider() {
     provider = nullptr;
   }
   lastFrame.release();
+  lastOutput.release();
   emit frameCleared();
 }
 
@@ -68,8 +69,11 @@ void Controller::render() {
   auto outputFrame = lastFrame.clone();
   pipeline->apply(outputFrame);
   isolateDisplayChannels(outputFrame);
+  lastOutput = outputFrame;
   emit frameChanged(outputFrame);
 }
+
+cv::Mat Controller::currentOutput() const { return lastOutput.clone(); }
 
 void Controller::isolateDisplayChannels(cv::Mat &frame) const {
   if (displayChannels == Channel::All) {
