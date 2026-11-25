@@ -39,13 +39,7 @@ Ao adicionar uma operação, o programa pede a segunda imagem. Ela é redimensio
 
 ### Stickers
 
-Os stickers ficam em `assets/stickers/` e são embutidos no executável pelo sistema de recursos do Qt (`assets/assets.qrc`). Cada sticker posicionado é sobreposto à imagem com *alpha blending*, pixel a pixel:
-
-```
-resultado = α · sticker + (1 − α) · fundo
-```
-
-O valor α vem do canal alfa do PNG, normalizado entre 0 e 1. Os stickers são desenhados depois da pipeline de filtros, então não são afetados por ela.
+Os stickers ficam em `assets/stickers/` e são embutidos no executável pelo sistema de recursos do Qt (`assets/assets.qrc`). Para sobrepor um sticker, o canal alfa do PNG vira uma máscara: os pixels com alfa acima de 127 são copiados por cima da imagem e os demais são ignorados, deixando a foto aparecer. Os stickers são desenhados depois da pipeline de filtros, então não são afetados por ela.
 
 ## Compilação
 
