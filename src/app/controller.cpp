@@ -10,6 +10,7 @@ void Controller::setProvider(Provider *prov) {
     provider->stop();
     disconnect(connection);
   }
+  stickers.clear();
   provider = prov;
   connection = connect(provider, &Provider::frameChanged, this,
                        [this](const cv::Mat &frame) {
@@ -25,6 +26,7 @@ void Controller::cleanProvider() {
     disconnect(connection);
     provider = nullptr;
   }
+  stickers.clear();
   lastFrame.release();
   lastOutput.release();
   emit frameCleared();
@@ -49,9 +51,18 @@ void Controller::removeFilter(int index) {
   render();
 }
 
-void Controller::clearFilters() {
+void Controller::reset() {
   pipeline->clear();
+  stickers.clear();
   emit pipelineChanged(pipeline->listFilters());
+  render();
+}
+
+void Controller::addSticker(const cv::Mat &sticker, cv::Point center) {
+  if (lastFrame.empty()) {
+    return;
+  }
+  stickers.push_back({sticker, center});
   render();
 }
 
@@ -76,6 +87,9 @@ void Controller::render() {
     return;
   auto outputFrame = lastFrame.clone();
   pipeline->apply(outputFrame);
+  for (const auto &placed : stickers) {
+    overlaySticker(outputFrame, placed.image, placed.center);
+  }
   isolateDisplayChannels(outputFrame);
   lastOutput = outputFrame;
   emit frameChanged(outputFrame);

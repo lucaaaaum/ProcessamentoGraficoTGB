@@ -69,7 +69,7 @@ void MainWindow::setupConnections() {
   connect(pipelineWidget, &PipelineWidget::addFilterRequested, this,
           &MainWindow::addFilterFromPreset);
   connect(pipelineWidget, &PipelineWidget::resetRequested, controller,
-          &Controller::clearFilters);
+          &Controller::reset);
   connect(pipelineWidget, &PipelineWidget::removeFilterRequested, controller,
           &Controller::removeFilter);
   connect(pipelineWidget, &PipelineWidget::moveFilterRequested, controller,

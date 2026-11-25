@@ -2,6 +2,7 @@
 
 #include "capturing/provider.h"
 #include "processing/pipeline.h"
+#include "processing/sticker.h"
 #include <QObject>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
@@ -16,6 +17,7 @@ private:
   QMetaObject::Connection connection;
   cv::Mat lastFrame;
   cv::Mat lastOutput;
+  std::vector<PlacedSticker> stickers;
   Channel displayChannels = Channel::All;
   void render();
   void isolateDisplayChannels(cv::Mat &frame) const;
@@ -28,7 +30,8 @@ public:
   void freezeFrame();
   void addFilter(const Filter &filter);
   void removeFilter(int index);
-  void clearFilters();
+  void reset();
+  void addSticker(const cv::Mat &sticker, cv::Point center);
   void moveFilter(int fromIndex, int toIndex);
   void setFilterChannels(int index, Channel channels);
   void setDisplayChannels(Channel channels);
