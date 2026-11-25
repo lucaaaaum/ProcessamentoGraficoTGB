@@ -4,6 +4,7 @@
 #include "capturing/camera.h"
 #include "ui/canvas.h"
 #include "ui/pipeline_widget.h"
+#include "ui/sticker_widget.h"
 #include <QComboBox>
 #include <QMainWindow>
 #include <qpushbutton.h>
@@ -17,6 +18,8 @@ private:
   void setupMenu();
   void setupLayout();
   void setupPipelineDock();
+  void setupStickerDock();
+  void placeSticker(cv::Point position);
   void setupConnections();
   void toggleCamera();
   void takePicture();
@@ -38,4 +41,6 @@ private:
   QAction *importAction;
   QDockWidget *pipelineDock;
   PipelineWidget *pipelineWidget;
+  QDockWidget *stickerDock;
+  StickerWidget *stickerWidget;
 };

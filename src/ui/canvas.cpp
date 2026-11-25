@@ -1,4 +1,5 @@
 #include "canvas.h"
+#include <QMouseEvent>
 #include <QPainter>
 #include <opencv2/imgproc.hpp>
 
@@ -42,9 +43,27 @@ void Canvas::paintEvent(QPaintEvent *event) {
   }
 
   painter.setRenderHint(QPainter::SmoothPixmapTransform);
+  painter.drawImage(imageArea(), image);
+}
+
+QRect Canvas::imageArea() const {
   QSize target = image.size().scaled(size(), Qt::KeepAspectRatio);
-  QRect area(
+  return QRect(
       QPoint((width() - target.width()) / 2, (height() - target.height()) / 2),
       target);
-  painter.drawImage(area, image);
+}
+
+void Canvas::mousePressEvent(QMouseEvent *event) {
+  if (event->button() != Qt::LeftButton || image.isNull() ||
+      !message.isEmpty()) {
+    return;
+  }
+  QRect area = imageArea();
+  QPoint pos = event->position().toPoint();
+  if (!area.contains(pos)) {
+    return;
+  }
+  int x = (pos.x() - area.x()) * image.width() / area.width();
+  int y = (pos.y() - area.y()) * image.height() / area.height();
+  emit imageClicked(cv::Point(x, y));
 }

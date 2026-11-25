@@ -10,6 +10,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QStandardPaths>
+#include <QStatusBar>
 #include <QVBoxLayout>
 #include <opencv2/imgcodecs.hpp>
 
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   displayChannelBox->addItem("B", static_cast<int>(Channel::Blue));
   setupMenu();
   setupPipelineDock();
+  setupStickerDock();
   setupLayout();
   setupConnections();
 }
@@ -58,6 +60,7 @@ void MainWindow::setupLayout() {
 void MainWindow::setupConnections() {
   connect(controller, &Controller::frameChanged, canvas, &Canvas::setMat);
   connect(controller, &Controller::frameCleared, canvas, &Canvas::clear);
+  connect(canvas, &Canvas::imageClicked, this, &MainWindow::placeSticker);
   connect(controller, &Controller::pipelineChanged, pipelineWidget,
           &PipelineWidget::setFilters);
   connect(toggleCameraButton, &QPushButton::clicked, this,
@@ -192,4 +195,24 @@ void MainWindow::setupPipelineDock() {
   pipelineWidget = new PipelineWidget;
   pipelineDock->setWidget(pipelineWidget);
   addDockWidget(Qt::RightDockWidgetArea, pipelineDock);
+}
+
+void MainWindow::setupStickerDock() {
+  stickerDock = new QDockWidget("Stickers", this);
+  stickerWidget = new StickerWidget;
+  stickerDock->setWidget(stickerWidget);
+  addDockWidget(Qt::RightDockWidgetArea, stickerDock);
+}
+
+void MainWindow::placeSticker(cv::Point position) {
+  if (cameraOn) {
+    statusBar()->showMessage(
+        "Stickers só podem ser posicionados no Modo Foto.", 3000);
+    return;
+  }
+  cv::Mat sticker = stickerWidget->selectedSticker();
+  if (sticker.empty()) {
+    return;
+  }
+  controller->addSticker(sticker, position);
 }

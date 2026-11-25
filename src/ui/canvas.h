@@ -16,10 +16,15 @@ public slots:
   void clear();
   void setMessage(const QString &msg);
 
+signals:
+  void imageClicked(cv::Point position);
+
 protected:
   void paintEvent(QPaintEvent *event) override;
+  void mousePressEvent(QMouseEvent *event) override;
 
 private:
   QImage image;
   QString message;
+  QRect imageArea() const;
 };
