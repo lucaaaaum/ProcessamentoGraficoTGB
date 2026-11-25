@@ -7,4 +7,5 @@ struct PlacedSticker {
   cv::Point center;
 };
 
-void overlaySticker(cv::Mat &frame, const cv::Mat &sticker, cv::Point center);
+void overlaySticker(cv::Mat &frame, const cv::Mat &sticker,
+                    cv::Point stickerCenter);
