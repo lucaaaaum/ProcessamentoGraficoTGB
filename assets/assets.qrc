@@ -1,0 +1,14 @@
+<RCC>
+  <qresource prefix="/">
+    <file>stickers/arco_iris.png</file>
+    <file>stickers/beijo.png</file>
+    <file>stickers/cachorro.png</file>
+    <file>stickers/coracao.png</file>
+    <file>stickers/coroa.png</file>
+    <file>stickers/estrela.png</file>
+    <file>stickers/festa.png</file>
+    <file>stickers/fogo.png</file>
+    <file>stickers/oculos_escuros.png</file>
+    <file>stickers/unicornio.png</file>
+  </qresource>
+</RCC>

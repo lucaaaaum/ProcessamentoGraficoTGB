@@ -11,6 +11,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets OpenGLWidgets)
 find_package(OpenCV REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp src/*.h src/*.ui src/*.qrc)
+list(APPEND SOURCES assets/assets.qrc)
 
 add_executable(tgb ${SOURCES})
 target_include_directories(tgb PRIVATE src)
